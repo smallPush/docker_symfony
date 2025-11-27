@@ -1,0 +1,27 @@
+FROM php:8.2-apache
+
+
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libicu-dev \
+    zlib1g-dev \
+    libzip-dev \
+    && docker-php-ext-install \
+    intl \
+    pdo_mysql \
+    zip \
+    opcache \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod rewrite
+
+
+COPY apache.conf /etc/apache2/sites-available/000-default.conf
+
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+RUN chown -R www-data:www-data /var/www/html

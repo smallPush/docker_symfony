@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    container_name: symfony_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./symfony:/var/www/html
+    depends_on:
+      - database
+    networks:
+      - rubofvil_lan
+
+  database:
+    image: mysql:8.0
+    container_name: symfony_db
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: admin
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - rubofvil_lan
+
+networks:
+  rubofvil_lan:
+    driver: bridge
+
+volumes:
+  db_data:
